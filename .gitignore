@@ -8,6 +8,9 @@ Thumbs.db
 *.txt
 data/
 
+# Class files
+*.md
+
 # Python caches & virtual envs
 __pycache__/
 *.pyc
