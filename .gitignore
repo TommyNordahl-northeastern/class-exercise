@@ -12,6 +12,7 @@ data/
 # Class files
 *.md
 9-29-26/inclass6.py
+inclass*
 
 # Python caches & virtual envs
 __pycache__/
