@@ -2,11 +2,12 @@
 
 from fastapi import FastAPI, Query
 from fastapi import File, UploadFile, HTTPException
-from src import MovieInput, MovieResponse, DataStorage, CSVInfo
+from src import MovieInput, MovieResponse, DataStorage, CSVInfo, ProcessConfig
 from pathlib import Path
 import logging
 import io
 import pandas as pd
+from middleware import log_requests
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,6 +22,8 @@ movies = {
 }
 
 app = FastAPI(title="Movie API")
+
+app.middleware("http")(log_requests)
 
 storage = DataStorage()
 
@@ -159,3 +162,16 @@ def get_dataset_shape(dataset_id: int):
     shape_dict = {"dataset_id": dataset_id, "rows": len(data), 
                   "columns": len(data.columns)}
     return shape_dict
+
+
+@app.post("/demo/process-config")
+def demo_process_config(config: ProcessConfig):
+    df = pd.DataFrame({"title": ["Movie A", "Movie A", "Movie B", None]})
+    settings = config.model_dump()
+    if settings["processing"]["remove_duplicates"]:
+        df = df.drop_duplicates()
+    if settings["processing"]["drop_missing"]:
+        df = df.dropna()
+
+    return {"rows": len(df)}
+    
