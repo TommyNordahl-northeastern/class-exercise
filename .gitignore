@@ -8,6 +8,7 @@ Thumbs.db
 *.txt
 data/
 !requirements.txt
+class16_18/data/
 
 # Class files
 *.md
